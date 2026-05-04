@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Protocol for OpenMS, DIA-NN, MaxQuant, and Spectronaut" />
 
+<meta name="date" content="2026-04-28" />
 
-<title>README_team3</title>
+<title>Harmonized Proteomics Analysis Protocol</title>
 
 <script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
 // be compatible with the behavior of Pandoc < 2.8).
@@ -348,100 +350,378 @@ display: none;
 
 
 
+<h1 class="title toc-ignore">Harmonized Proteomics Analysis
+Protocol</h1>
+<h4 class="author">Protocol for OpenMS, DIA-NN, MaxQuant, and
+Spectronaut</h4>
+<h4 class="date">2026-04-28</h4>
 
 </div>
 
-
-<div id="team-3-aleksandra-sh.-peyman-sushmita-andrea" class="section level1">
-<h1>Team 3: Aleksandra Sh., Peyman, Sushmita, Andrea</h1>
-<div id="capstone-project-folder" class="section level2">
-<h2>Capstone Project Folder</h2>
-<p>This folder contains all materials and results for <strong>your
-team’s capstone project</strong> in the course:</p>
-<p><strong>Mass Spectrometry-Based Proteomics: Concepts, Methods, and
-Data (MS-PROT 2026)</strong><br />
-University of Helsinki – Spring 2026</p>
-<hr />
-</div>
-<div id="team-member-roles" class="section level2">
-<h2>Team Member Roles</h2>
-<p>Each team member should take responsibility for one or more of the
-following tasks:</p>
+<div id="TOC">
 <ul>
-<li><p><strong>SDRF Maker</strong> (Andrea)</p>
-<p>Responsible for creating and validating the <code>SDRF.tsv</code>
-file according to required standards.</p></li>
-<li><p><strong>Software Runner</strong> (Aleksandra)</p>
-<p>Handles running the assigned DIA analysis software and generating
-identification results.</p></li>
-<li><p><strong>Repository Manager (Pulling Fork)</strong> (Peyman)</p>
-<p>Manages the GitHub workflow, including pulling updates, maintaining
-the fork, and organizing files.</p></li>
-<li><p><strong>Report Writer</strong> (Sushmita)</p>
-<p>Leads the documentation and writing of project reports, including
-methods, results, and interpretations.</p></li>
+<li><a href="#overview" id="toc-overview">Overview</a></li>
+<li><a href="#experimental-assumptions" id="toc-experimental-assumptions">Experimental Assumptions</a></li>
+<li><a href="#core-parameters" id="toc-core-parameters">Core
+Parameters</a>
+<ul>
+<li><a href="#input-data-and-global-settings" id="toc-input-data-and-global-settings">1. Input Data and Global
+Settings</a></li>
+<li><a href="#database-and-digestion" id="toc-database-and-digestion">2.
+Database and Digestion</a></li>
+<li><a href="#modifications" id="toc-modifications">3.
+Modifications</a></li>
+<li><a href="#mass-accuracy-and-identification" id="toc-mass-accuracy-and-identification">4. Mass Accuracy and
+Identification</a></li>
+<li><a href="#fdr-control-and-quantification" id="toc-fdr-control-and-quantification">5. FDR Control and
+Quantification</a></li>
+</ul></li>
+<li><a href="#dia-specific-settings-if-applicable" id="toc-dia-specific-settings-if-applicable">DIA-Specific Settings (If
+Applicable)</a></li>
+<li><a href="#tool-specific-execution-notes" id="toc-tool-specific-execution-notes">Tool-Specific Execution Notes</a>
+<ul>
+<li><a href="#openms" id="toc-openms">OpenMS</a></li>
+<li><a href="#dia-nn" id="toc-dia-nn">DIA-NN</a></li>
+<li><a href="#maxquant" id="toc-maxquant">MaxQuant</a></li>
+<li><a href="#spectronaut" id="toc-spectronaut">Spectronaut</a></li>
+</ul></li>
+<li><a href="#post-processing-and-reporting" id="toc-post-processing-and-reporting">Post-processing and
+Reporting</a></li>
+<li><a href="#limitations" id="toc-limitations">Limitations</a></li>
 </ul>
+</div>
+
+<div id="overview" class="section level1">
+<h1>Overview</h1>
+<p>This protocol describes a <strong>harmonized analysis
+workflow</strong> for running <strong>OpenMS, DIA-NN, MaxQuant, and
+Spectronaut</strong> on the same proteomics dataset while keeping
+<strong>core parameters as consistent as possible</strong>.<br />
+The goal is to minimize configuration-induced bias so that observed
+differences primarily reflect algorithmic design.</p>
 <blockquote>
-<p>💡 Team members are encouraged to collaborate and support each other
-across roles.</p>
+<p><strong>Important note:</strong> Exact equivalence between tools is
+not possible due to fundamentally different scoring, inference, and
+machine-learning strategies. This protocol defines <em>core
+parameters</em> that are conceptually shared.</p>
 </blockquote>
 <hr />
 </div>
-<div id="contents-of-this-folder" class="section level2">
-<h2>Contents of this folder</h2>
+<div id="experimental-assumptions" class="section level1">
+<h1>Experimental Assumptions</h1>
 <ul>
-<li><p><code>SDRF.tsv</code><br />
-Sample and Data Relationship Format file describing the experimental
-design</p></li>
-<li><p><code>identification/</code><br />
-Protein/precursor identification results generated using the assigned
-DIA workflow</p></li>
-<li><p><code>optional_analysis/</code><br />
-(Optional) downstream statistical and biological analysis
-results</p></li>
+<li>Same raw MS files are used across all tools</li>
+<li>Same FASTA file for database search (Please download it before 4th
+May vie this link <a href="https://filesender.funet.fi/?s=download&amp;token=f8310a8c-2fa0-472a-8adc-5231917c058c" class="uri">https://filesender.funet.fi/?s=download&amp;token=f8310a8c-2fa0-472a-8adc-5231917c058c</a>)</li>
+<li>Same acquisition strategy (DIA)</li>
+<li>Same biological samples and replicates</li>
+<li>Same level of comparison (primarily
+<strong>peptide-level</strong>)</li>
 </ul>
 <hr />
 </div>
-<div id="project-summary" class="section level2">
-<h2>Project Summary</h2>
-<p>In this capstone project, your team is responsible for:</p>
+<div id="core-parameters" class="section level1">
+<h1>Core Parameters</h1>
+<div id="input-data-and-global-settings" class="section level2">
+<h2>1. Input Data and Global Settings</h2>
+<table>
+<colgroup>
+<col width="28%" />
+<col width="30%" />
+<col width="40%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Raw files</td>
+<td>Same vendor RAW files</td>
+<td>No mixing of file versions</td>
+</tr>
+<tr class="even">
+<td>Centroiding</td>
+<td>Vendor centroiding</td>
+<td>Avoid profile/centroid mixing</td>
+</tr>
+<tr class="odd">
+<td>Acquisition type</td>
+<td>DIA</td>
+<td>Must be identical</td>
+</tr>
+<tr class="even">
+<td>Instrument model</td>
+<td>Orbitrap Astral</td>
+<td>Conceptual matching</td>
+</tr>
+<tr class="odd">
+<td>Internal calibration</td>
+<td>Enabled</td>
+<td>In all tools</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="database-and-digestion" class="section level2">
+<h2>2. Database and Digestion</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>FASTA database</td>
+<td>Identical FASTA file</td>
+</tr>
+<tr class="even">
+<td>Contaminants</td>
+<td>Same contaminant set</td>
+</tr>
+<tr class="odd">
+<td>Decoy strategy</td>
+<td>Reverse target–decoy</td>
+</tr>
+<tr class="even">
+<td>Enzyme</td>
+<td>Trypsin/P</td>
+</tr>
+<tr class="odd">
+<td>Missed cleavages</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td>Enzyme specificity</td>
+<td>Fully tryptic</td>
+</tr>
+<tr class="odd">
+<td>Min peptide length</td>
+<td>7 amino acids</td>
+</tr>
+<tr class="even">
+<td>Max peptide length</td>
+<td>30–40 amino acids</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="modifications" class="section level2">
+<h2>3. Modifications</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Fixed modifications</td>
+<td>Carbamidomethyl (C)</td>
+</tr>
+<tr class="even">
+<td>Variable modifications</td>
+<td>Oxidation (M), Acetylation (N-term)</td>
+</tr>
+<tr class="odd">
+<td>Protein N-term acetylation</td>
+<td>Enabled</td>
+</tr>
+<tr class="even">
+<td>Max variable mods / peptide</td>
+<td>5</td>
+</tr>
+<tr class="odd">
+<td>Open modification search</td>
+<td>Disabled</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="mass-accuracy-and-identification" class="section level2">
+<h2>4. Mass Accuracy and Identification</h2>
+<table>
+<colgroup>
+<col width="26%" />
+<col width="45%" />
+<col width="28%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Precursor tolerance</td>
+<td>Orbitrap-appropriate (≈10–20 ppm)</td>
+<td>Conceptual equivalence</td>
+</tr>
+<tr class="even">
+<td>Fragment tolerance</td>
+<td>Orbitrap-appropriate (≈20–30 ppm)</td>
+<td>Do not force identical numbers</td>
+</tr>
+<tr class="odd">
+<td>MS1 recalibration</td>
+<td>Enabled</td>
+<td>Improve mass accuracy</td>
+</tr>
+<tr class="even">
+<td>MS2 recalibration</td>
+<td>Enabled</td>
+<td>Improve scoring</td>
+</tr>
+<tr class="odd">
+<td>Identification scoring</td>
+<td>Tool-specific</td>
+<td>Defaults retained</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="fdr-control-and-quantification" class="section level2">
+<h2>5. FDR Control and Quantification</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>PSM FDR</td>
+<td>1%</td>
+</tr>
+<tr class="even">
+<td>Peptide FDR</td>
+<td>1%</td>
+</tr>
+<tr class="odd">
+<td>Protein FDR</td>
+<td>1%</td>
+</tr>
+<tr class="even">
+<td>Quantification level</td>
+<td>MS2-based</td>
+</tr>
+<tr class="odd">
+<td>Match-between-runs</td>
+<td>On or Off (same choice)</td>
+</tr>
+<tr class="even">
+<td>Normalization</td>
+<td>Global / median-based</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Recommendation:</strong> Primary comparisons should be
+performed at the <strong>peptide level</strong>. Protein-level results
+should be treated as secondary due to differing inference models.</p>
+</blockquote>
+<hr />
+</div>
+</div>
+<div id="dia-specific-settings-if-applicable" class="section level1">
+<h1>DIA-Specific Settings (If Applicable)</h1>
+<table>
+<thead>
+<tr class="header">
+<th>Parameter</th>
+<th>Harmonized Value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Analysis mode</td>
+<td>Library-free (library prediction from FASTA)</td>
+</tr>
+<tr class="even">
+<td>Spectral library</td>
+<td>Same library file if used</td>
+</tr>
+<tr class="odd">
+<td>iRT peptides</td>
+<td>Same iRT set (if used)</td>
+</tr>
+<tr class="even">
+<td>Isolation windows</td>
+<td>Same DIA scheme</td>
+</tr>
+</tbody>
+</table>
+<p>Do <strong>not</strong> mix library-free and library-based modes
+across tools in a single comparison.</p>
+<hr />
+</div>
+<div id="tool-specific-execution-notes" class="section level1">
+<h1>Tool-Specific Execution Notes</h1>
+<div id="openms" class="section level2">
+<h2>OpenMS</h2>
+<ul>
+<li>Use equivalent digestion and modification settings</li>
+<li>Enable internal calibration</li>
+<li>Export peptide-level results for downstream harmonization</li>
+</ul>
+</div>
+<div id="dia-nn" class="section level2">
+<h2>DIA-NN</h2>
+<ul>
+<li>Use identical FASTA and digestion rules</li>
+<li>Disable extra PTMs and heuristic expansions</li>
+<li>Keep default neural-network scoring</li>
+</ul>
+</div>
+<div id="maxquant" class="section level2">
+<h2>MaxQuant</h2>
+<ul>
+<li>Use Andromeda defaults except where harmonized</li>
+<li>Disable extra variable modifications</li>
+<li>Carefully document match-between-runs setting</li>
+</ul>
+</div>
+<div id="spectronaut" class="section level2">
+<h2>Spectronaut</h2>
+<ul>
+<li>Use DirectDIA for library-free analysis if applicable</li>
+<li>Align digestion, modifications, and FDR thresholds</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="post-processing-and-reporting" class="section level1">
+<h1>Post-processing and Reporting</h1>
 <ol style="list-style-type: decimal">
-<li>Processing DIA proteomics data (<code>.mzML</code> files)</li>
-<li>Performing protein/precursor identification using the assigned
-software tool</li>
-<li>Generating a valid SDRF file describing the experimental design</li>
-<li>Submitting identification results and metadata according to course
-guidelines</li>
-<li>Performing downstream statistical analysis</li>
+<li>Export <strong>peptide-level tables</strong> from all tools</li>
+<li>Apply identical filtering criteria</li>
+<li>Optionally re-aggregate to protein level externally</li>
+<li>Report overlap, sensitivity, and quantitative precision</li>
 </ol>
-<p>⚠️ The preferred output level for identification is
-<strong>precursor/PSM-level data</strong>, in addition to protein-level
-summaries.</p>
 <hr />
 </div>
-<div id="full-guidelines" class="section level2">
-<h2>Full Guidelines</h2>
-<p>For complete instructions, workflows, submission rules, and
-tool-specific details, please refer to:</p>
-<p>👉 <strong>Main Capstone Project Guide (README):</strong><br />
-<a href="https://github.com/jafarilab/MSProt2026/tree/main/capstoneProject" class="uri">https://github.com/jafarilab/MSProt2026/tree/main/capstoneProject</a></p>
-<hr />
-</div>
-<div id="notes" class="section level2">
-<h2>Notes</h2>
+<div id="limitations" class="section level1">
+<h1>Limitations</h1>
 <ul>
-<li>Follow SDRF standards carefully<br />
-</li>
-<li>Do not upload files outside your assigned folder</li>
+<li>Machine-learning models differ substantially across tools</li>
+<li>Protein inference strategies are not equivalent</li>
+<li>Interference correction and scoring models cannot be harmonized</li>
 </ul>
-<hr />
-</div>
-<div id="support" class="section level2">
-<h2>Support</h2>
-<p>If you encounter issues, contact the teaching team during course
-hours or via email.</p>
-<hr />
-</div>
+<p>These limitations should be explicitly acknowledged in comparative
+studies.</p>
 </div>
 
 
